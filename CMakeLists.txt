@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(twist_mux)
+project(ackermann_mux)
 
 find_package(catkin REQUIRED
     COMPONENTS
       roscpp
       std_msgs
-      geometry_msgs
+      ackermann_msgs
       visualization_msgs
       diagnostic_updater)
 
@@ -18,27 +18,20 @@ catkin_package(
     CATKIN_DEPENDS
       roscpp
       std_msgs
-      geometry_msgs
+      ackermann_msgs
       visualization_msgs
       diagnostic_updater)
 
 include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
-add_executable(twist_mux
-    src/twist_mux.cpp
-    src/twist_mux_node.cpp
-    src/twist_mux_diagnostics.cpp)
-target_link_libraries(twist_mux ${catkin_LIBRARIES})
+add_executable(ackermann_mux
+    src/ackermann_mux.cpp
+    src/ackermann_mux_node.cpp
+    src/ackermann_mux_diagnostics.cpp)
+target_link_libraries(ackermann_mux ${catkin_LIBRARIES})
 
-add_executable(twist_marker
-    src/twist_marker.cpp)
-target_link_libraries(twist_marker ${catkin_LIBRARIES})
-
-install(TARGETS twist_mux twist_marker
+install(TARGETS ackermann_mux
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-
-install(PROGRAMS scripts/joystick_relay.py
-    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 foreach(dir launch config)
     install(DIRECTORY ${dir}/

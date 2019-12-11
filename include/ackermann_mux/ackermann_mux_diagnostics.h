@@ -21,26 +21,26 @@
 #ifndef TWIST_MUX_DIAGNOSTICS_H
 #define TWIST_MUX_DIAGNOSTICS_H
 
-#include <twist_mux/twist_mux_diagnostics_status.h>
+#include <ackermann_mux/ackermann_mux_diagnostics_status.h>
 
 #include <diagnostic_updater/diagnostic_updater.h>
 #include <ros/ros.h>
 
 #include <boost/shared_ptr.hpp>
 
-namespace twist_mux
+namespace ackermann_mux
 {
 
-class TwistMuxDiagnostics
+class AckermannMuxDiagnostics
 {
   public:
-    typedef TwistMuxDiagnosticsStatus status_type;
+    typedef AckermannMuxDiagnosticsStatus status_type;
 
     static constexpr double MAIN_LOOP_TIME_MIN = 0.2; // [s]
     static constexpr double READING_AGE_MIN    = 3.0; // [s]
 
-    TwistMuxDiagnostics();
-    virtual ~TwistMuxDiagnostics();
+    AckermannMuxDiagnostics();
+    virtual ~AckermannMuxDiagnostics();
 
     void diagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat);
 
@@ -64,6 +64,6 @@ class TwistMuxDiagnostics
     status_type                 status_;
 };
 
-} // namespace twist_mux
+} // namespace ackermann_mux
 
 #endif // TWIST_MUX_DIAGNOSTICS_H

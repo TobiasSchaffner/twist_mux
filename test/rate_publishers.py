@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# twist_mux: rate_publishers.py
+# ackermann_mux: rate_publishers.py
 #
 # Copyright (c) 2014 PAL Robotics SL.
 # All Rights Reserved

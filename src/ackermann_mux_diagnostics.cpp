@@ -18,29 +18,29 @@
  * @author Enrique Fernandez
  */
 
-#include <twist_mux/twist_mux_diagnostics.h>
-#include <twist_mux/twist_mux_diagnostics_status.h>
+#include <ackermann_mux/ackermann_mux_diagnostics.h>
+#include <ackermann_mux/ackermann_mux_diagnostics_status.h>
 
 #include <diagnostic_updater/diagnostic_updater.h>
 
-namespace twist_mux
+namespace ackermann_mux
 {
 
-TwistMuxDiagnostics::TwistMuxDiagnostics()
+AckermannMuxDiagnostics::AckermannMuxDiagnostics()
 {
-  diagnostic_.add("Twist mux status", this, &TwistMuxDiagnostics::diagnostics);
+  diagnostic_.add("Ackermann mux status", this, &AckermannMuxDiagnostics::diagnostics);
   diagnostic_.setHardwareID("none");
 }
 
-TwistMuxDiagnostics::~TwistMuxDiagnostics()
+AckermannMuxDiagnostics::~AckermannMuxDiagnostics()
 {}
 
-void TwistMuxDiagnostics::update()
+void AckermannMuxDiagnostics::update()
 {
   diagnostic_.update();
 }
 
-void TwistMuxDiagnostics::updateStatus(const status_type::ConstPtr& status)
+void AckermannMuxDiagnostics::updateStatus(const status_type::ConstPtr& status)
 {
   ROS_DEBUG_THROTTLE(1.0, "Updating status.");
 
@@ -54,7 +54,7 @@ void TwistMuxDiagnostics::updateStatus(const status_type::ConstPtr& status)
   update();
 }
 
-void TwistMuxDiagnostics::diagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat)
+void AckermannMuxDiagnostics::diagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat)
 {
   /// Check if the loop period is quick enough
   if (status_.main_loop_time > MAIN_LOOP_TIME_MIN)
@@ -92,4 +92,4 @@ void TwistMuxDiagnostics::diagnostics(diagnostic_updater::DiagnosticStatusWrappe
   ROS_DEBUG_THROTTLE(1.0, "Publishing diagnostics.");
 }
 
-} // namespace twist_mux
+} // namespace ackermann_mux

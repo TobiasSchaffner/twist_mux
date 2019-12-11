@@ -19,36 +19,36 @@
  * @author Siegfried Gevatter
  */
 
-#include <twist_mux/twist_mux.h>
-#include <twist_mux/topic_handle.h>
-#include <twist_mux/twist_mux_diagnostics.h>
-#include <twist_mux/twist_mux_diagnostics_status.h>
-#include <twist_mux/utils.h>
-#include <twist_mux/xmlrpc_helpers.h>
+#include <ackermann_mux/ackermann_mux.h>
+#include <ackermann_mux/topic_handle.h>
+#include <ackermann_mux/ackermann_mux_diagnostics.h>
+#include <ackermann_mux/ackermann_mux_diagnostics_status.h>
+#include <ackermann_mux/utils.h>
+#include <ackermann_mux/xmlrpc_helpers.h>
 
 /**
  * @brief hasIncreasedAbsVelocity Check if the absolute velocity has increased
  * in any of the components: linear (abs(x)) or angular (abs(yaw))
- * @param old_twist Old velocity
- * @param new_twist New velocity
+ * @param old_ackermann Old velocity
+ * @param new_ackermann New velocity
  * @return true is any of the absolute velocity components has increased
  */
-bool hasIncreasedAbsVelocity(const geometry_msgs::Twist& old_twist, const geometry_msgs::Twist& new_twist)
+bool hasIncreasedAbsVelocity(const ackermann_msgs::AckermannDrive& old_ackermann, const ackermann_msgs::AckermannDrive& new_ackermann)
 {
-  const auto old_linear_x = std::abs(old_twist.linear.x);
-  const auto new_linear_x = std::abs(new_twist.linear.x);
+  const auto old_speed = std::abs(old_ackermann.speed);
+  const auto new_speed = std::abs(new_ackermann.speed);
 
-  const auto old_angular_z = std::abs(old_twist.angular.z);
-  const auto new_angular_z = std::abs(new_twist.angular.z);
+  const auto old_steering_angle = std::abs(old_ackermann.steering_angle);
+  const auto new_steering_angle = std::abs(new_ackermann.steering_angle);
 
-  return (old_linear_x  < new_linear_x ) or
-         (old_angular_z < new_angular_z);
+  return (old_speed  < new_speed ) or
+         (old_steering_angle < new_steering_angle);
 }
 
-namespace twist_mux
+namespace ackermann_mux
 {
 
-TwistMux::TwistMux(int window_size)
+AckermannMux::AckermannMux(int window_size)
 {
   ros::NodeHandle nh;
   ros::NodeHandle nh_priv("~");
@@ -60,7 +60,7 @@ TwistMux::TwistMux(int window_size)
   getTopicHandles(nh, nh_priv, "locks" , *lock_hs_ );
 
   /// Publisher for output topic:
-  cmd_pub_ = nh.advertise<geometry_msgs::Twist>("cmd_vel_out", 1);
+  cmd_pub_ = nh.advertise<ackermann_msgs::AckermannDrive>("cmd_vel_out", 1);
 
   /// Diagnostics:
   diagnostics_ = boost::make_shared<diagnostics_type>();
@@ -68,25 +68,25 @@ TwistMux::TwistMux(int window_size)
   status_->velocity_hs = velocity_hs_;
   status_->lock_hs     = lock_hs_;
 
-  diagnostics_timer_ = nh.createTimer(ros::Duration(DIAGNOSTICS_PERIOD), &TwistMux::updateDiagnostics, this);
+  diagnostics_timer_ = nh.createTimer(ros::Duration(DIAGNOSTICS_PERIOD), &AckermannMux::updateDiagnostics, this);
 }
 
-TwistMux::~TwistMux()
+AckermannMux::~AckermannMux()
 {}
 
-void TwistMux::updateDiagnostics(const ros::TimerEvent& event)
+void AckermannMux::updateDiagnostics(const ros::TimerEvent& event)
 {
   status_->priority = getLockPriority();
   diagnostics_->updateStatus(status_);
 }
 
-void TwistMux::publishTwist(const geometry_msgs::TwistConstPtr& msg)
+void AckermannMux::publishAckermann(const ackermann_msgs::AckermannDriveConstPtr& msg)
 {
   cmd_pub_.publish(*msg);
 }
 
 template<typename T>
-void TwistMux::getTopicHandles(ros::NodeHandle& nh, ros::NodeHandle& nh_priv, const std::string& param_name, std::list<T>& topic_hs)
+void AckermannMux::getTopicHandles(ros::NodeHandle& nh, ros::NodeHandle& nh_priv, const std::string& param_name, std::list<T>& topic_hs)
 {
   try
   {
@@ -115,7 +115,7 @@ void TwistMux::getTopicHandles(ros::NodeHandle& nh, ros::NodeHandle& nh_priv, co
   }
 }
 
-int TwistMux::getLockPriority()
+int AckermannMux::getLockPriority()
 {
   LockTopicHandle::priority_type priority = 0;
 
@@ -138,7 +138,7 @@ int TwistMux::getLockPriority()
   return priority;
 }
 
-bool TwistMux::hasPriority(const VelocityTopicHandle& twist)
+bool AckermannMux::hasPriority(const VelocityTopicHandle& ackermann)
 {
   const auto lock_priority = getLockPriority();
 
@@ -160,7 +160,7 @@ bool TwistMux::hasPriority(const VelocityTopicHandle& twist)
     }
   }
 
-  return twist.getName() == velocity_name;
+  return ackermann.getName() == velocity_name;
 }
 
-} // namespace twist_mux
+} // namespace ackermann_mux

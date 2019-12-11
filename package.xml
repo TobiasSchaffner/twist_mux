@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package>
-  <name>twist_mux</name>
+  <name>ackermann_mux</name>
   <version>3.1.0</version>
   <description>
-      Twist multiplexer, which multiplex several velocity commands (topics) and
+      Ackermann multiplexer, which multiplex several velocity commands (topics) and
       allows to priorize or disable them (locks).
   </description>
 
@@ -18,15 +18,15 @@
 
   <build_depend>roscpp</build_depend>
   <build_depend>std_msgs</build_depend>
-  <build_depend>geometry_msgs</build_depend>
+  <build_depend>ackermann_msgs</build_depend>
   <build_depend>visualization_msgs</build_depend>
   <build_depend>diagnostic_updater</build_depend>
 
   <run_depend>roscpp</run_depend>
   <run_depend>std_msgs</run_depend>
-  <run_depend>geometry_msgs</run_depend>
+  <run_depend>ackermann_msgs</run_depend>
   <run_depend>visualization_msgs</run_depend>
-  <run_depend>twist_mux_msgs</run_depend>
+  <run_depend>ackermann_mux_msgs</run_depend>
   <run_depend>diagnostic_updater</run_depend>
 
   <!-- Tests -->
@@ -38,7 +38,7 @@
       <rosindex>
           <tags>
               <tag>control</tag>
-              <tag>twist</tag>
+              <tag>ackermann</tag>
               <tag>cmd_vel</tag>
               <tag>multiplex</tag>
               <tag>mux</tag>

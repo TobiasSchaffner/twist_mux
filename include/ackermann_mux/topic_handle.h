@@ -24,10 +24,10 @@
 
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
-#include <geometry_msgs/Twist.h>
+#include <ackermann_msgs/AckermannDrive.h>
 
-#include <twist_mux/utils.h>
-#include <twist_mux/twist_mux.h>
+#include <ackermann_mux/utils.h>
+#include <ackermann_mux/ackermann_mux.h>
 
 #include <boost/utility.hpp>
 #include <boost/scoped_ptr.hpp>
@@ -35,7 +35,7 @@
 #include <string>
 #include <vector>
 
-namespace twist_mux
+namespace ackermann_mux
 {
 
 template<typename T>
@@ -55,7 +55,7 @@ public:
    * expired
    * @param priority Priority of the topic
    */
-  TopicHandle_(ros::NodeHandle& nh, const std::string& name, const std::string& topic, double timeout, priority_type priority, TwistMux* mux)
+  TopicHandle_(ros::NodeHandle& nh, const std::string& name, const std::string& topic, double timeout, priority_type priority, AckermannMux* mux)
     : nh_(nh)
     , name_(name)
     , topic_(topic)
@@ -133,21 +133,21 @@ protected:
   priority_type priority_;
 
 protected:
-  TwistMux* mux_;
+  AckermannMux* mux_;
 
   ros::Time stamp_;
   T msg_;
 };
 
-class VelocityTopicHandle : public TopicHandle_<geometry_msgs::Twist>
+class VelocityTopicHandle : public TopicHandle_<ackermann_msgs::AckermannDrive>
 {
 private:
-  typedef TopicHandle_<geometry_msgs::Twist> base_type;
+  typedef TopicHandle_<ackermann_msgs::AckermannDrive> base_type;
 
 public:
   typedef typename base_type::priority_type priority_type;
 
-  VelocityTopicHandle(ros::NodeHandle& nh, const std::string& name, const std::string& topic, double timeout, priority_type priority, TwistMux* mux)
+  VelocityTopicHandle(ros::NodeHandle& nh, const std::string& name, const std::string& topic, double timeout, priority_type priority, AckermannMux* mux)
     : base_type(nh, name, topic, timeout, priority, mux)
   {
     subscriber_ = nh_.subscribe(topic_, 1, &VelocityTopicHandle::callback, this);
@@ -158,18 +158,18 @@ public:
     return hasExpired() or (getPriority() < lock_priority);
   }
 
-  void callback(const geometry_msgs::TwistConstPtr& msg)
+  void callback(const ackermann_msgs::AckermannDriveConstPtr& msg)
   {
     stamp_ = ros::Time::now();
     msg_   = *msg;
 
-    // Check if this twist has priority.
+    // Check if this ackermann has priority.
     // Note that we have to check all the locks because they might time out
     // and since we have several topics we must look for the highest one in
     // all the topic list; so far there's no O(1) solution.
     if (mux_->hasPriority(*this))
     {
-      mux_->publishTwist(msg);
+      mux_->publishAckermann(msg);
     }
   }
 };
@@ -182,7 +182,7 @@ private:
 public:
   typedef typename base_type::priority_type priority_type;
 
-  LockTopicHandle(ros::NodeHandle& nh, const std::string& name, const std::string& topic, double timeout, priority_type priority, TwistMux* mux)
+  LockTopicHandle(ros::NodeHandle& nh, const std::string& name, const std::string& topic, double timeout, priority_type priority, AckermannMux* mux)
     : base_type(nh, name, topic, timeout, priority, mux)
   {
     subscriber_ = nh_.subscribe(topic_, 1, &LockTopicHandle::callback, this);
@@ -204,6 +204,6 @@ public:
   }
 };
 
-} // namespace twist_mux
+} // namespace ackermann_mux
 
 #endif // TOPIC_HANDLE_H

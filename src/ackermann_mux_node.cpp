@@ -20,14 +20,14 @@
  */
 
 #include <ros/ros.h>
-#include <twist_mux/twist_mux.h>
+#include <ackermann_mux/ackermann_mux.h>
 
 int
 main(int argc, char *argv[])
 {
-  ros::init(argc, argv, "twist_mux");
+  ros::init(argc, argv, "ackermann_mux");
 
-  twist_mux::TwistMux mux;
+  ackermann_mux::AckermannMux mux;
 
   while (ros::ok())
   {

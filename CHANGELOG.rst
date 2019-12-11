@@ -1,5 +1,5 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package twist_mux
+Changelog for package ackermann_mux
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 3.1.0 (2018-06-25)
@@ -7,7 +7,7 @@ Changelog for package twist_mux
 
 3.0.0 (2016-07-12)
 ------------------
-* Merge pull request `#8 <https://github.com/ros-teleop/twist_mux/issues/8>`_ from ros-teleop/update_jade_from_indigo_devel
+* Merge pull request `#8 <https://github.com/ros-teleop/ackermann_mux/issues/8>`_ from ros-teleop/update_jade_from_indigo_devel
   fix queue_size SyntaxWarning
 * fix queue_size SyntaxWarning
 * Update README.md
@@ -36,5 +36,5 @@ Changelog for package twist_mux
 
 0.0.1 (2014-11-13)
 ------------------
-* Add twist multiplexer
+* Add ackermann multiplexer
 * Contributors: Enrique Fernandez, Siegfried Gevatter, Paul Mathieu

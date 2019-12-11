@@ -24,24 +24,24 @@
 
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
-#include <geometry_msgs/Twist.h>
+#include <ackermann_msgs/AckermannDrive.h>
 
 #include <list>
 
-namespace twist_mux
+namespace ackermann_mux
 {
 
 // Forwarding declarations:
-class TwistMuxDiagnostics;
-struct TwistMuxDiagnosticsStatus;
+class AckermannMuxDiagnostics;
+struct AckermannMuxDiagnosticsStatus;
 class VelocityTopicHandle;
 class LockTopicHandle;
 
 /**
- * @brief The TwistMux class implements a top-level twist multiplexer module
+ * @brief The AckermannMux class implements a top-level ackermann multiplexer module
  * that priorize different velocity command topic inputs according to locks.
  */
-class TwistMux
+class AckermannMux
 {
 public:
 
@@ -52,19 +52,19 @@ public:
   typedef std::list<VelocityTopicHandle> velocity_topic_container;
   typedef std::list<LockTopicHandle>     lock_topic_container;
 
-  TwistMux(int window_size = 10);
-  ~TwistMux();
+  AckermannMux(int window_size = 10);
+  ~AckermannMux();
 
-  bool hasPriority(const VelocityTopicHandle& twist);
+  bool hasPriority(const VelocityTopicHandle& ackermann);
 
-  void publishTwist(const geometry_msgs::TwistConstPtr& msg);
+  void publishAckermann(const ackermann_msgs::AckermannDriveConstPtr& msg);
 
   void updateDiagnostics(const ros::TimerEvent& event);
 
 protected:
 
-  typedef TwistMuxDiagnostics       diagnostics_type;
-  typedef TwistMuxDiagnosticsStatus status_type;
+  typedef AckermannMuxDiagnostics       diagnostics_type;
+  typedef AckermannMuxDiagnosticsStatus status_type;
 
   ros::Timer diagnostics_timer_;
 
@@ -84,7 +84,7 @@ protected:
 
   ros::Publisher cmd_pub_;
 
-  geometry_msgs::Twist last_cmd_;
+  ackermann_msgs::AckermannDrive last_cmd_;
 
   template<typename T>
   void getTopicHandles(ros::NodeHandle& nh, ros::NodeHandle& nh_priv, const std::string& param_name, std::list<T>& topic_hs);
@@ -95,6 +95,6 @@ protected:
   boost::shared_ptr<status_type>      status_;
 };
 
-} // namespace twist_mux
+} // namespace ackermann_mux
 
 #endif // TWIST_MUX_H
